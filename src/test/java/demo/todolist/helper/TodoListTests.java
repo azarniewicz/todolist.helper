@@ -4,14 +4,10 @@ import demo.todolist.helper.task.Task;
 import demo.todolist.helper.task.TaskRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -44,7 +40,28 @@ public class TodoListTests extends TodolistHelperApplicationTests {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Task 1")))
                 .andExpect(content().string(containsString("Task 2")));
-
     }
 
+    @Test
+    void user_can_update_task() throws Exception {
+        Task task = taskRepository.save(new Task("Test Task"));
+
+        MockHttpServletRequestBuilder apiCall = MockMvcRequestBuilders.patch("/api/task/{id}", task.getId())
+                .param("title", "Changed Title");
+
+        this.mockMvc.perform(apiCall)
+                .andExpect(status().isOk());
+
+        assertThat(taskRepository.findByTitle("Changed Title")).isNotNull();
+    }
+
+    @Test
+    void user_can_delete_task() throws Exception {
+        Task task = taskRepository.save(new Task("Test Task"));
+
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/api/task/{id}", task.getId()))
+                .andExpect(status().isOk());
+
+        assertThat(taskRepository.findById(task.getId())).isEmpty();
+    }
 }

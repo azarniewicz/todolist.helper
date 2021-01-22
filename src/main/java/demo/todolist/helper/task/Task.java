@@ -7,7 +7,7 @@ public class Task {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private int id;
 
     private String title;
 
@@ -17,16 +17,20 @@ public class Task {
         this.title = title;
     }
 
-    public <title> Task(Long id, String title) {
+    public <title> Task(int id, String title) {
         this.id = id;
         this.title = title;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
     public String getTitle() {
         return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }
