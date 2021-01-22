@@ -6,11 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import static org.hamcrest.Matchers.containsString;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.assertj.core.api.Assertions.assertThat;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.Matchers.*;
 
 public class TodoListTests extends TodolistHelperApplicationTests {
 
@@ -38,8 +36,9 @@ public class TodoListTests extends TodolistHelperApplicationTests {
 
         this.mockMvc.perform(apiCall)
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Task 1")))
-                .andExpect(content().string(containsString("Task 2")));
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].title", is("Task 1")))
+                .andExpect(jsonPath("$[1].title", is("Task 2")));
     }
 
     @Test
