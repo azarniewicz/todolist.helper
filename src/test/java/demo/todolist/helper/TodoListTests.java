@@ -6,8 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import static org.assertj.core.api.Assertions.assertThat;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 
 public class TodoListTests extends TodolistHelperApplicationTests {
@@ -24,6 +27,31 @@ public class TodoListTests extends TodolistHelperApplicationTests {
                 .andExpect(status().isCreated());
 
         assertThat(taskRepository.findByTitle("Write test")).isNotNull();
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    void task_title_must_be_unique() throws Exception {
+        Task task = taskRepository.save(new Task("Test Task"));
+
+        MockHttpServletRequestBuilder apiCall = MockMvcRequestBuilders.post("/api/task/create")
+                .param("title", "Test Task");
+
+        this.mockMvc.perform(apiCall)
+                .andExpect(status().isBadRequest());
+
+        taskRepository.deleteById(task.getId());
+    }
+
+    @Test
+    void title_is_required_to_add_task_list_item() throws Exception {
+        MockHttpServletRequestBuilder apiCall = MockMvcRequestBuilders.post("/api/task/create")
+                .param("title", "");
+
+        this.mockMvc.perform(apiCall)
+                .andExpect(status().isBadRequest());
+
+        assertThat(taskRepository.findAll()).isEmpty();
     }
 
     @Test
@@ -55,6 +83,28 @@ public class TodoListTests extends TodolistHelperApplicationTests {
     }
 
     @Test
+    void updated_task_must_exist() throws Exception {
+        MockHttpServletRequestBuilder apiCall = MockMvcRequestBuilders.patch("/api/task/{id}", 1)
+                .param("title", "Changed Title");
+
+        this.mockMvc.perform(apiCall)
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void updated_title_must_not_be_blank() throws Exception {
+        Task task = taskRepository.save(new Task("Test Task"));
+
+        MockHttpServletRequestBuilder apiCall = MockMvcRequestBuilders.patch("/api/task/{id}", task.getId())
+                .param("title", "");
+
+        this.mockMvc.perform(apiCall)
+                .andExpect(status().isBadRequest());
+
+        assertThat(taskRepository.findByTitle("Test Task")).isNotNull();
+    }
+
+    @Test
     void user_can_delete_task() throws Exception {
         Task task = taskRepository.save(new Task("Test Task"));
 
@@ -62,5 +112,13 @@ public class TodoListTests extends TodolistHelperApplicationTests {
                 .andExpect(status().isOk());
 
         assertThat(taskRepository.findById(task.getId())).isEmpty();
+    }
+
+    @Test
+    void task_to_delete_must_exist() throws Exception {
+        MockHttpServletRequestBuilder apiCall = MockMvcRequestBuilders.delete("/api/task/{id}", 1);
+
+        this.mockMvc.perform(apiCall)
+                .andExpect(status().isNotFound());
     }
 }

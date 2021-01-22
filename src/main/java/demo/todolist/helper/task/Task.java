@@ -9,6 +9,7 @@ public class Task {
     @GeneratedValue
     private int id;
 
+    @Column(unique=true)
     private String title;
 
     public Task() {}
