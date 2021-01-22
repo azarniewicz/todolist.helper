@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("api")
+@RequestMapping("api/task")
 public class TaskController {
 
     @Autowired
@@ -18,5 +18,9 @@ public class TaskController {
         taskRepository.save(new Task(title));
     }
 
+    @GetMapping("")
+    public @ResponseBody Iterable<Task> getTasks() {
+        return taskRepository.findAll();
+    }
 
 }
