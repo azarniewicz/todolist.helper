@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class HomeControllerTests extends TodolistHelperApplicationTests {
 
     @Autowired
-    private HomeController controller;
+    private TodolistHelperApplication.HomeController controller;
 
     @Test
     void context_loads() {
