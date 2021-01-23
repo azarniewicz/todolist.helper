@@ -16,12 +16,12 @@ class HomeControllerTests extends TodolistHelperApplicationTests {
     private TodolistHelperApplication.HomeController controller;
 
     @Test
-    void context_loads() {
+    public void context_loads() {
         assertThat(controller).isNotNull();
     }
 
     @Test
-    void home_should_return_swagger_page() throws Exception {
+    public void home_should_return_swagger_page() throws Exception {
         this.mockMvc.perform(get("/"))
                 .andExpect(redirectedUrl("swagger-ui.html"));
     }

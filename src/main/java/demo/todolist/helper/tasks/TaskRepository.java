@@ -1,4 +1,4 @@
-package demo.todolist.helper.task;
+package demo.todolist.helper.tasks;
 
 import org.springframework.data.repository.CrudRepository;
 
