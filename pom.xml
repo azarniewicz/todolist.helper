@@ -12,7 +12,7 @@
 	<artifactId>todolist.helper</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Todolist Helper</name>
-	<description>Todo list, that finds solutions from StackOverflow for items in your list.</description>
+	<description>Todo list, that finds solutions for items in your list.</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
@@ -60,10 +60,20 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sourceforge.htmlunit</groupId>
+			<artifactId>htmlunit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
 		</dependency>
 
 	</dependencies>

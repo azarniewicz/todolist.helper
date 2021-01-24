@@ -5,19 +5,17 @@ import demo.todolist.helper.solutions.SolutionFinder;
 import demo.todolist.helper.solutions.SolutionRepository;
 import demo.todolist.helper.tasks.*;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@RunWith(SpringRunner.class)
 public class TaskAssignedListenerTest extends TodolistHelperApplicationTests {
 
     @Mock
@@ -30,7 +28,7 @@ public class TaskAssignedListenerTest extends TodolistHelperApplicationTests {
     private TaskRepository taskRepository;
 
     @Test
-    public void listener_calls_service_to_find_solutions_and_stores_the_result() {
+    public void listener_calls_service_to_find_solutions_and_stores_the_result() throws IOException {
         Task task = taskRepository.save(new Task("Test Task"));
         List<Solution> solutions = new ArrayList<>();
         solutions.add(new Solution("URL 1", task));

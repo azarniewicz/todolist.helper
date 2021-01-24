@@ -1,8 +1,7 @@
 package demo.todolist.helper.solutions;
 
 import demo.todolist.helper.tasks.Task;
-import org.hibernate.annotations.*;
-import org.hibernate.annotations.CascadeType;
+import demo.todolist.helper.tasks.TaskDto;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
@@ -27,6 +26,11 @@ public class Solution {
     public Solution(String url, Task task) {
         this.url = url;
         this.task = task;
+    }
+
+    public Solution(String url, TaskDto task) {
+        this.url = url;
+        this.task = new Task(task.id, task.title);
     }
 
     public void setId(int id) {
