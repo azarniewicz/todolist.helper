@@ -1,55 +1,48 @@
 package demo.todolist.helper.tasks;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
-import java.util.Optional;
 
 @Validated
 @RestController
 @RequestMapping("api/task")
 public class TaskController {
 
-    @Autowired
-    private TaskRepository taskRepository;
+    private final TaskDao taskDao;
 
     @Autowired
-    private ApplicationEventPublisher eventPublisher;
+    public TaskController(TaskDao taskDao) {
+        this.taskDao = taskDao;
+    }
 
     @PostMapping("create")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addTask(@RequestParam("title") @NotBlank(message = "Title must not be blank") String title) {
-        Task task = taskRepository.save(new Task(title));
-        eventPublisher.publishEvent(new TaskAssignedEvent(task));
+    public void addTask(
+            @RequestParam("title")
+            @NotBlank(message = "Title must not be blank") String title
+    ) throws TaskAlreadyExistsException {
+        taskDao.createTask(title);
     }
 
     @GetMapping("")
     public @ResponseBody Iterable<Task> getTasks() {
-        return taskRepository.findAll();
+        return taskDao.getAllTasks();
     }
 
     @PatchMapping("{id}")
     public @ResponseBody Task updateTask(
             @PathVariable int id,
             @RequestParam @NotBlank(message = "Title must not be blank") String title
-    ) {
-        Optional<Task> taskData = taskRepository.findById(id);
-        if (taskData.isEmpty()) {
-            throw new EmptyResultDataAccessException(id);
-        }
-
-        Task task = taskData.get();
-        task.setTitle(title);
-        return taskRepository.save(task);
+    ) throws TaskAlreadyExistsException {
+        return taskDao.updateTaskTitle(id, title);
     }
 
     @DeleteMapping("{id}")
     public void deleteTask(@PathVariable int id) {
-        taskRepository.deleteById(id);
+        taskDao.delete(id);
     }
 }

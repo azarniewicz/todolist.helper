@@ -1,7 +1,6 @@
 package demo.todolist.helper.tasks;
 
 import demo.todolist.helper.solutions.Solution;
-import demo.todolist.helper.solutions.SolutionRepository;
 
 import javax.persistence.*;
 import java.util.List;
