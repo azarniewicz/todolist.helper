@@ -30,9 +30,12 @@ public class SolutionFinderListener {
         Task task = event.getTask();
         try {
             task.setSolutions(solutionFinderService.getSolutionsFor(task.toDto()));
-            taskRepository.save(task);
+            task.setFindingSolutionStatus(FindingSolutionStatus.COMPLETED);
         } catch (Exception e) {
+            task.setFindingSolutionStatus(FindingSolutionStatus.FAILED);
             logger.error(e.getMessage());
+        } finally {
+            taskRepository.save(task);
         }
     }
 }

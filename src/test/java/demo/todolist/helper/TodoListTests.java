@@ -1,5 +1,6 @@
 package demo.todolist.helper;
 
+import demo.todolist.helper.solutions.FindingSolutionStatus;
 import demo.todolist.helper.tasks.Task;
 import demo.todolist.helper.tasks.TaskAssignedEvent;
 import demo.todolist.helper.tasks.TaskRepository;
@@ -40,7 +41,9 @@ public class TodoListTests extends TodolistHelperApplicationTests {
                 .param("title", "Write test");
 
         this.mockMvc.perform(apiCall)
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("title", is("Write test")))
+                .andExpect(jsonPath("findingSolutionStatus", is(FindingSolutionStatus.IN_PROGRESS.name())));
 
         assertThat(taskRepository.findByTitle("Write test")).isNotNull();
     }
@@ -107,7 +110,9 @@ public class TodoListTests extends TodolistHelperApplicationTests {
                 .param("title", "Changed Title");
 
         this.mockMvc.perform(apiCall)
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("title", is("Changed Title")))
+                .andExpect(jsonPath("findingSolutionStatus", is(FindingSolutionStatus.IN_PROGRESS.name())));;
 
         assertThat(taskRepository.findByTitle("Changed Title")).isNotNull();
     }

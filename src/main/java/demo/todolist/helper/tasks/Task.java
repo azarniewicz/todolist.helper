@@ -1,5 +1,6 @@
 package demo.todolist.helper.tasks;
 
+import demo.todolist.helper.solutions.FindingSolutionStatus;
 import demo.todolist.helper.solutions.Solution;
 
 import javax.persistence.*;
@@ -23,6 +24,8 @@ public class Task {
             orphanRemoval = true
     )
     private List<Solution> solutions;
+
+    private FindingSolutionStatus findingSolutionStatus = FindingSolutionStatus.IN_PROGRESS;
 
     public Task() {}
 
@@ -57,5 +60,13 @@ public class Task {
 
     public TaskDto toDto() {
         return new TaskDto(this.getId(), this.getTitle());
+    }
+
+    public FindingSolutionStatus getFindingSolutionStatus() {
+        return findingSolutionStatus;
+    }
+
+    public void setFindingSolutionStatus(FindingSolutionStatus findingSolutionStatus) {
+        this.findingSolutionStatus = findingSolutionStatus;
     }
 }

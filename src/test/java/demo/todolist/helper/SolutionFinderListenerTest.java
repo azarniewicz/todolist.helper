@@ -1,9 +1,6 @@
 package demo.todolist.helper;
 
-import demo.todolist.helper.solutions.Solution;
-import demo.todolist.helper.solutions.SolutionFinder;
-import demo.todolist.helper.solutions.SolutionRepository;
-import demo.todolist.helper.solutions.SolutionFinderListener;
+import demo.todolist.helper.solutions.*;
 import demo.todolist.helper.tasks.*;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -22,9 +19,6 @@ public class SolutionFinderListenerTest extends TodolistHelperApplicationTests {
     @Mock
     private SolutionFinder solutionFinderService;
 
-    @Mock
-    private SolutionRepository solutionRepository;
-
     @Autowired
     private TaskRepository taskRepository;
 
@@ -42,5 +36,18 @@ public class SolutionFinderListenerTest extends TodolistHelperApplicationTests {
         Task updatedTask = taskRepository.findById(task.getId()).get();
 
         assertEquals(updatedTask.getSolutions(), solutions);
+        assertEquals(updatedTask.getFindingSolutionStatus(), FindingSolutionStatus.COMPLETED);
+    }
+
+    @Test
+    public void finding_solution_status_is_changed_when_finder_fails() throws IOException {
+        Task task = taskRepository.save(new Task("Test Task"));
+        Mockito.when(solutionFinderService.getSolutionsFor(any(TaskDto.class))).thenThrow(RuntimeException.class);
+
+        SolutionFinderListener listener = new SolutionFinderListener(solutionFinderService, taskRepository);
+        listener.handle(new TaskAssignedEvent(task));
+
+        Task updatedTask = taskRepository.findById(task.getId()).get();
+        assertEquals(updatedTask.getFindingSolutionStatus(), FindingSolutionStatus.FAILED);
     }
 }

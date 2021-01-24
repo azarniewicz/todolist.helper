@@ -21,11 +21,11 @@ public class TaskController {
 
     @PostMapping("create")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addTask(
+    public @ResponseBody Task addTask(
             @RequestParam("title")
             @NotBlank(message = "Title must not be blank") String title
     ) throws TaskAlreadyExistsException {
-        taskDao.createTask(title);
+        return taskDao.createTask(title);
     }
 
     @GetMapping("")

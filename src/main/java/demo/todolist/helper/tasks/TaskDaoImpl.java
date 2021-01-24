@@ -1,5 +1,6 @@
 package demo.todolist.helper.tasks;
 
+import demo.todolist.helper.solutions.FindingSolutionStatus;
 import demo.todolist.helper.solutions.Solution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -26,10 +27,11 @@ public class TaskDaoImpl implements TaskDao {
     }
 
     @Override
-    public void createTask(String title) throws TaskAlreadyExistsException {
+    public Task createTask(String title) throws TaskAlreadyExistsException {
         checkIfTaskExists(title);
         Task task = taskRepository.save(new Task(title));
         eventPublisher.publishEvent(new TaskAssignedEvent(task));
+        return task;
     }
 
     @Override
@@ -59,6 +61,7 @@ public class TaskDaoImpl implements TaskDao {
         if (taskSolutions != null) {
             task.getSolutions().removeAll(taskSolutions);
         }
+        task.setFindingSolutionStatus(FindingSolutionStatus.IN_PROGRESS);
     }
 
     @Override
