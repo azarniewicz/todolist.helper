@@ -3,6 +3,7 @@ package demo.todolist.helper;
 import demo.todolist.helper.solutions.Solution;
 import demo.todolist.helper.solutions.SolutionFinder;
 import demo.todolist.helper.solutions.SolutionRepository;
+import demo.todolist.helper.solutions.SolutionFinderListener;
 import demo.todolist.helper.tasks.*;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -16,7 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TaskAssignedListenerTest extends TodolistHelperApplicationTests {
+public class SolutionFinderListenerTest extends TodolistHelperApplicationTests {
 
     @Mock
     private SolutionFinder solutionFinderService;
@@ -35,7 +36,7 @@ public class TaskAssignedListenerTest extends TodolistHelperApplicationTests {
         solutions.add(new Solution("URL 2", task));
         Mockito.when(solutionFinderService.getSolutionsFor(any(TaskDto.class))).thenReturn(solutions);
 
-        TaskAssignedListener listener = new TaskAssignedListener(solutionFinderService, solutionRepository, taskRepository);
+        SolutionFinderListener listener = new SolutionFinderListener(solutionFinderService, taskRepository);
         listener.handle(new TaskAssignedEvent(task));
 
         Task updatedTask = taskRepository.findById(task.getId()).get();

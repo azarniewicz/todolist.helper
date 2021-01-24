@@ -52,4 +52,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return apiError.response();
     }
 
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(Exception.class)
+    ResponseEntity<Object> handleInternalException(Exception e) {
+        ApiError apiError = new ApiError(
+                LocalDateTime.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Internal Server Exception",
+                "The application was not able to process the request properly"
+        );
+        return apiError.response();
+    }
+
 }

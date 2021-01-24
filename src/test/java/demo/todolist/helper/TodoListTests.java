@@ -3,6 +3,7 @@ package demo.todolist.helper;
 import demo.todolist.helper.tasks.Task;
 import demo.todolist.helper.tasks.TaskAssignedEvent;
 import demo.todolist.helper.tasks.TaskRepository;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,11 @@ public class TodoListTests extends TodolistHelperApplicationTests {
 
     @Autowired
     private ConfigurableApplicationContext configurableApplicationContext;
+
+    @Before
+    public void setUp() {
+        taskRepository.deleteAll();
+    }
 
     @Test
     public void user_can_add_a_task_list_item() throws Exception {

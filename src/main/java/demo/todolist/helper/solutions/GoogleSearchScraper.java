@@ -1,4 +1,4 @@
-package demo.todolist.helper.solutions.connectors;
+package demo.todolist.helper.solutions;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
@@ -25,10 +25,8 @@ public class GoogleSearchScraper {
     public List<String> scrapTopTwoResultsFromSearch(String search) throws IOException {
         HtmlPage page = webClient.getPage(url + "?q=" + search);
         DomElement resultsContainer = page.getElementById("search");
-        List<HtmlAnchor> items = resultsContainer.getByXPath(".//a[contains(@href, 'http')]") ;
-        return items.stream().limit(2).map(HtmlAnchor::getHrefAttribute).collect(Collectors.toList());
-        //            HtmlSpan titleSpan = (HtmlSpan) firstItem.getFirstByXPath(".//h3/span");
-        //            String title = titleSpan.asText();
+        List<HtmlAnchor> items = resultsContainer.getByXPath(".//a[starts-with(@href, 'http') and not(contains(@href, 'google.com'))]") ;
+        return items.stream().map(HtmlAnchor::getHrefAttribute).distinct().limit(2).collect(Collectors.toList());
     }
 
 }

@@ -23,7 +23,7 @@ public class GoogleSearchSolutionFinderTests extends TodolistHelperApplicationTe
     public void returns_two_links_from_google_search() throws IOException {
         Task task = new Task("Get results from google search in java");
         List<Solution> solutions = googleSearchSolutionFinder.getSolutionsFor(task.toDto());
-        assertEquals(solutions.size(), 2);
+        assertEquals(2, solutions.size());
         for (Solution solution: solutions) {
             String url = solution.getUrl();
             assertNotNull(url);

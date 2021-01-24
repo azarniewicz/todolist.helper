@@ -1,10 +1,13 @@
 package demo.todolist.helper.tasks;
 
+import demo.todolist.helper.solutions.Solution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -14,7 +17,10 @@ public class TaskDaoImpl implements TaskDao {
     private final ApplicationEventPublisher eventPublisher;
 
     @Autowired
-    public TaskDaoImpl(TaskRepository taskRepository, ApplicationEventPublisher eventPublisher) {
+    public TaskDaoImpl(
+            TaskRepository taskRepository,
+            ApplicationEventPublisher eventPublisher
+    ) {
         this.taskRepository = taskRepository;
         this.eventPublisher = eventPublisher;
     }
@@ -32,6 +38,7 @@ public class TaskDaoImpl implements TaskDao {
     }
 
     @Override
+    @Transactional
     public Task updateTaskTitle(int id, String title) throws TaskAlreadyExistsException {
         checkIfTaskExists(title);
         Optional<Task> taskData = taskRepository.findById(id);
@@ -41,7 +48,17 @@ public class TaskDaoImpl implements TaskDao {
 
         Task task = taskData.get();
         task.setTitle(title);
-        return taskRepository.save(task);
+        removeTaskSolutions(task);
+        task = taskRepository.save(task);
+        eventPublisher.publishEvent(new TaskAssignedEvent(task));
+        return task;
+    }
+
+    private void removeTaskSolutions(Task task) {
+        List<Solution> taskSolutions = task.getSolutions();
+        if (taskSolutions != null) {
+            task.getSolutions().removeAll(taskSolutions);
+        }
     }
 
     @Override

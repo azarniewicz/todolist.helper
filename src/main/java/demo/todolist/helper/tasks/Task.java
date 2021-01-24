@@ -19,7 +19,7 @@ public class Task {
             targetEntity = Solution.class,
             mappedBy = "task",
             fetch = FetchType.EAGER,
-            cascade = CascadeType.REMOVE,
+            cascade = CascadeType.ALL,
             orphanRemoval = true
     )
     private List<Solution> solutions;

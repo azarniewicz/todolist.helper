@@ -1,6 +1,5 @@
 package demo.todolist.helper.solutions;
 
-import demo.todolist.helper.solutions.connectors.GoogleSearchScraper;
 import demo.todolist.helper.tasks.TaskDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

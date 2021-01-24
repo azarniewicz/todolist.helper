@@ -1,7 +1,8 @@
-package demo.todolist.helper.tasks;
+package demo.todolist.helper.solutions;
 
-import demo.todolist.helper.solutions.SolutionFinder;
-import demo.todolist.helper.solutions.SolutionRepository;
+import demo.todolist.helper.tasks.Task;
+import demo.todolist.helper.tasks.TaskAssignedEvent;
+import demo.todolist.helper.tasks.TaskRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,21 +12,15 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class TaskAssignedListener {
+public class SolutionFinderListener {
 
     final SolutionFinder solutionFinderService;
-    final SolutionRepository solutionRepository;
     final TaskRepository taskRepository;
-    Logger logger = LoggerFactory.getLogger(TaskAssignedListener.class);
+    Logger logger = LoggerFactory.getLogger(SolutionFinderListener.class);
 
     @Autowired
-    public TaskAssignedListener(
-            SolutionFinder solutionFinderService,
-            SolutionRepository solutionRepository,
-            TaskRepository taskRepository
-    ) {
+    public SolutionFinderListener(SolutionFinder solutionFinderService, TaskRepository taskRepository) {
         this.solutionFinderService = solutionFinderService;
-        this.solutionRepository = solutionRepository;
         this.taskRepository = taskRepository;
     }
 

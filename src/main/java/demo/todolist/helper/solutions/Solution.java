@@ -1,5 +1,6 @@
 package demo.todolist.helper.solutions;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import demo.todolist.helper.tasks.Task;
 import demo.todolist.helper.tasks.TaskDto;
 
@@ -10,12 +11,14 @@ import javax.persistence.Entity;
 public class Solution {
 
     @Id
+    @JsonIgnore
     @GeneratedValue
     private int id;
 
     @Column(nullable = false)
     private String url;
 
+    @JsonIgnore
     @ManyToOne(optional = false)
     @JoinColumn(name = "task_id")
     private Task task;
