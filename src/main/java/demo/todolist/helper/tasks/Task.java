@@ -2,6 +2,7 @@ package demo.todolist.helper.tasks;
 
 import demo.todolist.helper.solutions.FindingSolutionStatus;
 import demo.todolist.helper.solutions.Solution;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import java.util.List;
@@ -11,6 +12,7 @@ public class Task {
 
     @Id
     @GeneratedValue
+    @ApiModelProperty(hidden = true)
     private int id;
 
     @Column(unique=true)
@@ -23,8 +25,10 @@ public class Task {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
+    @ApiModelProperty(hidden = true)
     private List<Solution> solutions;
 
+    @ApiModelProperty(hidden = true)
     private FindingSolutionStatus findingSolutionStatus = FindingSolutionStatus.IN_PROGRESS;
 
     public Task() {}
